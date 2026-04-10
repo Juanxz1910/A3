@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="A3.css" />
+  <title>Atmos — Respire o Futuro</title>
+</head>
+<body>
+  <div id="root"><p style="color:#fff;padding:40px;font-family:sans-serif">Carregando...</p></div>
+
+  <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"
+    onerror="document.getElementById('root').innerHTML='<p style=color:#f87171;padding:40px;font-family:monospace>ERRO: React nao carregou. Verifique sua conexao com a internet.</p>'">
+  </script>
+  <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.23.2/babel.min.js"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    /* ── SVG Chart (sem Recharts) ── */
+    function AreaChartSVG({ data, dataKey, color }) {
+      const W = 100, H = 60, pad = 4;
+      const vals = data.map(d => d[dataKey]);
+      const min = Math.min(...vals), max = Math.max(...vals);
+      const range = max - min || 1;
+      const pts = data.map((d, i) => ({
+        x: pad + (i / (data.length - 1)) * (W - pad * 2),
+        y: H - pad - ((d[dataKey] - min) / range) * (H - pad * 2),
+      }));
+      const line = pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(' ');
+      const area = `${line} L${pts[pts.length-1].x.toFixed(2)},${H} L${pts[0].x.toFixed(2)},${H} Z`;
+      const gid = `g_${dataKey}`;
+      return (
+        <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="200" preserveAspectRatio="none" style={{display:'block'}}>
+          <defs>
+            <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%"  stopColor={color} stopOpacity="0.25"/>
+              <stop offset="95%" stopColor={color} stopOpacity="0"/>
+            </linearGradient>
+          </defs>
+          {[0.25,0.5,0.75].map(t => (
+            <line key={t} x1={pad} y1={(pad+(1-t)*(H-pad*2)).toFixed(2)} x2={W-pad} y2={(pad+(1-t)*(H-pad*2)).toFixed(2)}
+              stroke="rgba(255,255,255,0.04)" strokeWidth="0.4"/>
+          ))}
+          <path d={area} fill={`url(#${gid})`}/>
+          <path d={line} fill="none" stroke={color} strokeWidth="1"/>
+          {pts.map((p,i) => <circle key={i} cx={p.x.toFixed(2)} cy={p.y.toFixed(2)} r="1.5" fill={color}/>)}
+          {data.map((d,i) => (
+            <text key={i}
+              x={(pad + (i/(data.length-1))*(W-pad*2)).toFixed(2)}
+              y={H-0.5} textAnchor="middle" fontSize="4"
+              fill="#3d4566" fontFamily="JetBrains Mono, monospace">{d.day}</text>
+          ))}
+        </svg>
+      );
+    }
+
+    /* ── Icons ── */
+    const IcoMail    = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>;
+    const IcoLock    = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>;
+    const IcoUser    = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>;
+    const IcoEyeOn   = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zm0 12.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>;
+    const IcoEyeOff  = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27z"/></svg>;
+    const IcoWarn    = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>;
+    const IcoLogout  = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>;
+    const IcoUp      = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M7 14l5-5 5 5z"/></svg>;
+    const IcoDn      = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>;
+    const IcoOk      = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>;
+    const IcoWind    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9.5 4A2.5 2.5 0 0 1 12 6.5c0 1.38-1.12 2.5-2.5 2.5H2v-2h7.5A.5.5 0 0 0 10 6.5.5.5 0 0 0 9.5 6H2V4h7.5zm5 7A2.5 2.5 0 0 1 17 13.5 2.5 2.5 0 0 1 14.5 16H2v-2h12.5a.5.5 0 0 0 .5-.5.5.5 0 0 0-.5-.5H2v-2h12.5zm-2 4.5A2.5 2.5 0 0 1 15 18a2.5 2.5 0 0 1-2.5 2.5H2v-2h10.5a.5.5 0 0 0 .5-.5.5.5 0 0 0-.5-.5H2v-2h10.5z"/></svg>;
+    const IcoDroplet = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6 9 4 13.5 4 16a8 8 0 0 0 16 0c0-2.5-2-7-8-14z"/></svg>;
+    const IcoTherm   = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M15 13V5a3 3 0 0 0-6 0v8a5 5 0 1 0 6 0zm-3 7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>;
+    const IcoCO2     = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3a9 9 0 1 0 0 18A9 9 0 0 0 12 3zm-1 5h2v6h-2V8zm0 8h2v2h-2v-2z"/></svg>;
+    const IcoPurifier= () => <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm1 17.93V18h-2v1.93A8.001 8.001 0 0 1 4.07 13H6v-2H4.07A8.001 8.001 0 0 1 11 4.07V6h2V4.07A8.001 8.001 0 0 1 19.93 11H18v2h1.93A8.001 8.001 0 0 1 13 19.93z"/></svg>;
+    const IcoFilter  = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>;
+    const IcoSensor  = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4a8 8 0 1 0 0 16A8 8 0 0 0 12 4zm0 14a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-10a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm0 6a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg>;
+    const IcoTurbo   = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2.05v2.02c3.95.49 7 3.85 7 7.93 0 3.21-1.81 6-4.5 7.54L13 17v5h5l-1.22-1.22C19.91 19.07 22 15.76 22 12c0-5.18-3.95-9.45-9-9.95zM11 2.05C5.95 2.55 2 6.82 2 12c0 3.76 2.09 7.07 5.22 8.78L6 22h5v-5l-2.5 2.47C6.81 18 5 15.21 5 12c0-4.08 3.05-7.44 7-7.93V2.05z"/></svg>;
+
+    /* ── Data ── */
+    const WEEKLY_DATA = [
+      { day:"Seg", aqi:42, hum:58, temp:22 },
+      { day:"Ter", aqi:38, hum:62, temp:23 },
+      { day:"Qua", aqi:55, hum:55, temp:24 },
+      { day:"Qui", aqi:31, hum:67, temp:21 },
+      { day:"Sex", aqi:28, hum:70, temp:20 },
+      { day:"Sab", aqi:44, hum:60, temp:22 },
+      { day:"Dom", aqi:22, hum:74, temp:19 },
+    ];
+
+    /* ── Uptime ── */
+    function useUptime(start) {
+      const [e, setE] = useState(0);
+      useEffect(() => {
+        const id = setInterval(() => setE(Math.floor((Date.now() - start) / 1000)), 1000);
+        return () => clearInterval(id);
+      }, [start]);
+      const hh = String(Math.floor(e / 3600)).padStart(2,"0");
+      const mm = String(Math.floor((e % 3600) / 60)).padStart(2,"0");
+      const ss = String(e % 60).padStart(2,"0");
+      return `${hh}:${mm}:${ss}`;
+    }
+
+    /* ── Auth ── */
+    function Auth({ onLogin }) {
+      const [tab, setTab]         = useState("login");
+      const [u, setU]             = useState("");
+      const [p, setP]             = useState("");
+      const [n, setN]             = useState("");
+      const [show, setShow]       = useState(false);
+      const [loading, setLoading] = useState(false);
+      const [err, setErr]         = useState("");
+      const [shk, setShk]         = useState(false);
+
+      function shake() { setShk(true); setTimeout(() => setShk(false), 500); }
+
+      function submit() {
+        setErr("");
+        if (!u.trim() || !p.trim()) { setErr("Preencha todos os campos."); shake(); return; }
+        if (tab === "signup") {
+          if (!n.trim()) { setErr("Informe seu nome."); shake(); return; }
+          setLoading(true);
+          setTimeout(() => onLogin({ user: n, loginTime: Date.now() }), 1100);
+          return;
+        }
+        if (u === "adm" && p === "123") {
+          setLoading(true);
+          setTimeout(() => onLogin({ user: "Administrador", loginTime: Date.now() }), 1100);
+        } else {
+          setErr("Erro na autenticacao. Verifique suas credenciais.");
+          shake();
+        }
+      }
+
+      return (
+        <div className="auth-page">
+          <div className={`auth-box${shk ? " shakeme" : ""}`}>
+            <div className="brand">
+              <div className="brand-icon">A</div>
+              <span className="brand-name">ATMOS</span>
+            </div>
+            <p className="brand-tagline">Respire o futuro com Atmos</p>
+            <div className="tabs">
+              <button className={`tab${tab==="login"?" active":""}`} onClick={() => { setTab("login"); setErr(""); }}>Acesse sua central</button>
+              <button className={`tab${tab==="signup"?" active":""}`} onClick={() => { setTab("signup"); setErr(""); }}>Crie sua conta</button>
+            </div>
+            {tab === "signup" && (
+              <div className="field">
+                <label className="field-label">Nome completo</label>
+                <div className="field-wrap">
+                  <span className="field-ico"><IcoUser /></span>
+                  <input className="inp" type="text" placeholder="Seu nome" value={n}
+                    onChange={ev => setN(ev.target.value)} onKeyDown={ev => ev.key==="Enter" && submit()} />
+                </div>
+              </div>
+            )}
+            <div className="field">
+              <label className="field-label">{tab==="login" ? "Usuario" : "E-mail"}</label>
+              <div className="field-wrap">
+                <span className="field-ico">{tab==="login" ? <IcoUser/> : <IcoMail/>}</span>
+                <input className={`inp${err?" err":""}`} type="text"
+                  placeholder={tab==="login" ? "usuario ou email" : "seu@email.com"}
+                  value={u} onChange={ev => { setU(ev.target.value); setErr(""); }}
+                  onKeyDown={ev => ev.key==="Enter" && submit()} />
+              </div>
+            </div>
+            <div className="field">
+              <label className="field-label">Senha</label>
+              <div className="field-wrap">
+                <span className="field-ico"><IcoLock /></span>
+                <input className={`inp${err?" err":""}`} type={show?"text":"password"}
+                  placeholder={tab==="login" ? "sua senha" : "min. 6 caracteres"}
+                  value={p} onChange={ev => { setP(ev.target.value); setErr(""); }}
+                  onKeyDown={ev => ev.key==="Enter" && submit()} />
+                <button className="eye-btn" type="button" onClick={() => setShow(v => !v)}>
+                  {show ? <IcoEyeOff/> : <IcoEyeOn/>}
+                </button>
+              </div>
+            </div>
+            {err && <div className="err-box"><IcoWarn/><span>{err}</span></div>}
+            <button className="btn-main" onClick={submit} disabled={loading}>
+              <span>{loading ? "Conectando..." : (tab==="login" ? "Entrar" : "Criar conta")}</span>
+            </button>
+            {tab === "login" && (
+              <div className="hint-box">
+                Login rapido: <span style={{color:"var(--purple)"}}>adm</span> / <span style={{color:"var(--purple)"}}>123</span>
+              </div>
+            )}
+            <div className="auth-footer">2025 Atmos Technology v2.0</div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ── Dashboard ── */
+    function Dashboard({ session, onLogout }) {
+      const uptime = useUptime(session.loginTime);
+      const [chart, setChart] = useState("aqi");
+
+      const chartColors = { aqi:"#22d3ee", hum:"#3b82f6", temp:"#a855f7" };
+
+      const metrics = [
+        { icon:<IcoWind/>,    cls:"ic-blue",   val:22,  unit:"AQI", label:"Qualidade do Ar", trend:"-18%", up:true,  badge:"badge-green",  bl:"Excelente" },
+        { icon:<IcoDroplet/>, cls:"ic-cyan",   val:68,  unit:"%",   label:"Umidade",          trend:"+3%",  up:true,  badge:"badge-blue",   bl:"Ideal" },
+        { icon:<IcoTherm/>,   cls:"ic-purple", val:21,  unit:"°C",  label:"Temperatura",      trend:"-1°",  up:false, badge:"badge-purple", bl:"Confortavel" },
+        { icon:<IcoCO2/>,     cls:"ic-green",  val:412, unit:"ppm", label:"CO2",              trend:"-8%",  up:false, badge:"badge-cyan",   bl:"Normal" },
+      ];
+
+      const statusItems = [
+        { ico:<IcoPurifier/>, cls:"ic-blue",   name:"Purificador Atmos X1", desc:"Zona principal",   badge:"badge-green",  bl:"Ativo" },
+        { ico:<IcoFilter/>,   cls:"ic-green",  name:"Filtro HEPA Premium",  desc:"Troca em 47 dias", badge:"badge-green",  bl:"Otimo estado" },
+        { ico:<IcoSensor/>,   cls:"ic-cyan",   name:"Sensor IoT Gen3",      desc:"Firmware v4.2",    badge:"badge-blue",   bl:"Online" },
+        { ico:<IcoTurbo/>,    cls:"ic-purple", name:"Modo Turbo",           desc:"Pronto p/ uso",    badge:"badge-purple", bl:"Standby" },
+      ];
+
+      return (
+        <div className="dash">
+          <nav className="navbar">
+            <div className="nav-left">
+              <div className="nav-logo">A</div>
+              <span className="nav-title">ATMOS</span>
+            </div>
+            <div className="nav-right">
+              <div className="nav-status"><div className="dot-live"/>SISTEMA ONLINE</div>
+              <button className="btn-logout" onClick={onLogout}><IcoLogout/> Sair</button>
+            </div>
+          </nav>
+          <div className="dash-body">
+            <div className="welcome-row">
+              <div>
+                <p className="welcome-sup"><span style={{color:"#22c55e",marginRight:6}}>●</span>Sistema operacional</p>
+                <h1 className="welcome-title">Dashboard Atmos</h1>
+                <p className="welcome-sub">Ola, <strong style={{color:"var(--blue)"}}>{session.user}</strong>. O ar esta perfeito hoje.</p>
+              </div>
+              <div className="badge-row">
+                <span className="badge badge-green">● Online</span>
+                <span className="badge badge-blue">v2.0</span>
+                <span className="badge badge-purple">Pro</span>
+              </div>
+            </div>
+
+            <div className="metrics-row">
+              {metrics.map((m,i) => (
+                <div className="metric-card" key={i} style={{animationDelay:`${i*0.09}s`}}>
+                  <div className={`metric-icon ${m.cls}`}>{m.icon}</div>
+                  <div className="metric-label">{m.label}</div>
+                  <div className="metric-val">{m.val}<span className="metric-unit">{m.unit}</span></div>
+                  <div className="metric-trend">
+                    <span className={m.up?"trend-up":"trend-down"}>{m.up?<IcoUp/>:<IcoDn/>}{m.trend}</span>
+                    <span className={`badge ${m.badge}`} style={{marginLeft:6}}>{m.bl}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="neon-line"/>
+
+            <div className="grid2">
+              <div className="glass-card" style={{animationDelay:".15s"}}>
+                <div className="chart-header">
+                  <div>
+                    <div className="card-title">Monitoramento Semanal</div>
+                    <div className="card-sub">Historico dos ultimos 7 dias</div>
+                  </div>
+                </div>
+                <AreaChartSVG data={WEEKLY_DATA} dataKey={chart} color={chartColors[chart]}/><br/>
+                <div style={{display:"flex",gap:6}}>
+                    {[['aqi','AQI'],['hum','Umid.'],['temp','Temp.']].map(([k,l]) => (
+                      <button key={k} className={`chart-btn${chart===k?" active":""}`} onClick={() => setChart(k)}>{l}</button>
+                    ))}
+                </div>
+              </div>
+            
+              <div className="glass-card" style={{animationDelay:".2s"}}>
+                <div className="card-title" style={{marginBottom:16}}>Indice de Qualidade</div>
+                <div className="aqi-gauge">
+                  <div className="aqi-number">22</div>
+                  <div className="aqi-label">AQI atual</div>
+                  <div className="aqi-bar"><div className="aqi-fill" style={{width:"22%"}}/></div>
+                  <div className="aqi-scale"><span>0</span><span>50</span><span>100</span><span>150+</span></div>
+                </div>
+                <div className="neon-line" style={{margin:"14px 0"}}/>
+                {[
+                  {label:"Particulas PM2.5", value:"8 ug/m3",  width:"16%", delay:"0s"},
+                  {label:"PM10",             value:"14 ug/m3", width:"28%", delay:".2s"},
+                  {label:"VOCs",             value:"0.12 ppm", width:"12%", delay:".4s", alt:true},
+                ].map((pr,i) => (
+                  <div className="prog-item" key={i} style={i===2?{marginBottom:0}:{}}>
+                    <div className="prog-header"><span>{pr.label}</span><span>{pr.value}</span></div>
+                    <div className="prog-bar">
+                      <div className="prog-fill" style={{width:pr.width,animationDelay:pr.delay,
+                        background:pr.alt?"linear-gradient(90deg,var(--cyan),var(--blue))":undefined}}/>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid2b">
+              <div className="glass-card" style={{animationDelay:".25s"}}>
+                <div className="chart-header">
+                  <div>
+                    <div className="card-title">Status do Sistema</div>
+                    <div className="card-sub">Todos os servicos operacionais</div>
+                  </div>
+                  <span className="badge badge-green"><IcoOk/> Operacional</span>
+                </div>
+                <div className="status-list">
+                  {statusItems.map((s,i) => (
+                    <div className="status-item" key={i}>
+                      <div className="si-left">
+                        <div className={`si-ico ${s.cls}`}>{s.ico}</div>
+                        <div><div className="si-name">{s.name}</div><div className="si-desc">{s.desc}</div></div>
+                      </div>
+                      <span className={`badge ${s.badge}`}>{s.bl}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="glass-card" style={{animationDelay:".3s"}}>
+                <div className="card-title">Sessao Atual</div>
+                <div className="card-sub" style={{marginBottom:18}}>Tempo conectado ao sistema</div>
+                <div className="uptime-clock">{uptime}</div>
+                <div className="uptime-sub">hh : mm : ss</div>
+                <div className="neon-line" style={{margin:"18px 0"}}/>
+                <div style={{display:"flex",flexDirection:"column",gap:9}}>
+                  {[
+                    ["Usuario",         session.user,    "var(--blue)"],
+                    ["Status",          "Online",        "var(--green)"],
+                    ["Plano",           "Atmos Pro",     "var(--purple)"],
+                    ["Qualidade do ar", "Excelente",     "var(--cyan)"],
+                    ["Filtros",         "Em bom estado", "var(--green)"],
+                  ].map(([k,v,c],i) => (
+                    <div className="meta-row" key={i}>
+                      <span className="meta-k">{k}</span>
+                      <span className="meta-v" style={{color:c}}>{v}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div style={{textAlign:"center",paddingBottom:28,fontFamily:"var(--fm)",fontSize:10,color:"var(--t3)",letterSpacing:".08em"}}>
+              2025 Atmos Technology · Respire o futuro · v2.0.0
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+      /* ── App ── */
+      function App() {
+        const [session, setSession] = useState(null);
+        return (
+          <div className="app-wrap">
+            <div className="grid-bg"/>
+            <div className="orb o1"/><div className="orb o2"/><div className="orb o3"/>
+            {session
+              ? <Dashboard session={session} onLogout={() => setSession(null)}/>
+              : <Auth onLogin={s => setSession(s)}/>}
+          </div>
+        );
+      }
+  
+      ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+    </script>
+</body>
+</html>
