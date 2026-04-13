@@ -113,21 +113,58 @@
 
       function shake() { setShk(true); setTimeout(() => setShk(false), 500); }
 
-      function submit() {
+      async function submit() {
         setErr("");
+        const API = "http://localhost:5000";
+
         if (!u.trim() || !p.trim()) { setErr("Preencha todos os campos."); shake(); return; }
+
         if (tab === "signup") {
           if (!n.trim()) { setErr("Informe seu nome."); shake(); return; }
+          if (!u.includes("@")) { setErr("Informe um e-mail válido."); shake(); return; }
           setLoading(true);
-          setTimeout(() => onLogin({ user: n, loginTime: Date.now() }), 1100);
+          try {
+            const res = await fetch(API + "/cadastro", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ nome: n, email: u, usuario: u.split("@")[0], senha: p })
+            });
+            const data = await res.json();
+            if (data.ok) {
+              onLogin({ user: data.nome, loginTime: Date.now() });
+            } else {
+              setErr(data.erro || "Erro ao cadastrar.");
+              shake();
+              setLoading(false);
+            }
+          } catch {
+            setErr("Servidor offline. Rode o app.py no VS Code.");
+            shake();
+            setLoading(false);
+          }
           return;
         }
-        if (u === "adm" && p === "123") {
-          setLoading(true);
-          setTimeout(() => onLogin({ user: "Administrador", loginTime: Date.now() }), 1100);
-        } else {
-          setErr("Erro na autenticacao. Verifique suas credenciais.");
+
+        // Login
+        setLoading(true);
+        try {
+          const res = await fetch(API + "/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ usuario: u, senha: p })
+          });
+          const data = await res.json();
+          if (data.ok) {
+            onLogin({ user: data.nome, loginTime: Date.now() });
+          } else {
+            setErr(data.erro || "Credenciais incorretas.");
+            shake();
+            setLoading(false);
+          }
+        } catch {
+          setErr("Servidor offline. Rode o app.py no VS Code.");
           shake();
+          setLoading(false);
         }
       }
 
@@ -180,11 +217,7 @@
             <button className="btn-main" onClick={submit} disabled={loading}>
               <span>{loading ? "Conectando..." : (tab==="login" ? "Entrar" : "Criar conta")}</span>
             </button>
-            {tab === "login" && (
-              <div className="hint-box">
-                Login rapido: <span style={{color:"var(--purple)"}}>adm</span> / <span style={{color:"var(--purple)"}}>123</span>
-              </div>
-            )}
+            
             <div className="auth-footer">2025 Atmos Technology v2.0</div>
           </div>
         </div>
