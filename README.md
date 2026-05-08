@@ -178,7 +178,7 @@ Projeto desenvolvido em grupo para atividade acadêmica.
 * Felipe Felix
 * Eduardo Paleari  
 * Guilherme Sargentini
-* Juan
+* Juan Marcondes
 * Arthur 
 
 ---
