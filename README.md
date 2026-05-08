@@ -175,9 +175,11 @@ Projeto desenvolvido em grupo para atividade acadêmica.
 ### Integrantes
 
 * Leonardo Cordeiro Andrade
-* Adicionar integrantes do grupo
-* Adicionar integrantes do grupo
-* Adicionar integrantes do grupo
+* Felipe Felix
+* Eduardo Paleari  
+* Guilherme Sargentini
+* Juan
+* Arthur 
 
 ---
 
