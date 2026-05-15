@@ -179,7 +179,7 @@ Projeto desenvolvido em grupo para atividade acadêmica.
 * Eduardo Paleari  
 * Guilherme Sargentini
 * Juan Marcondes
-* Arthur 
+* Arthur Marques
 
 ---
 
