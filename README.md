@@ -15,6 +15,9 @@ Aplicação web desenvolvida com foco em experiência do usuário, organização
 
 ---
 
+Link Figma Wireframe: https://www.figma.com/design/bY1ZRu3JvIhqZhAxlrec2F/Wireframe?node-id=1-3&t=LS62DKSrArfny5cp-0
+
+---
 # 📚 Sobre o Projeto
 
 O **Atmos** é um projeto acadêmico desenvolvido para a atividade **A3 da faculdade**, com o objetivo de aplicar conceitos de:
