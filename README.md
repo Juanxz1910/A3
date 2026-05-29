@@ -15,9 +15,6 @@ Aplicação web desenvolvida com foco em experiência do usuário, organização
 
 ---
 
-Link Figma Mockup: (https://www.figma.com/design/x45ESlhUlCF8IwLoRIZ239/Mockup?node-id=0-1&p=f&t=g8fjNzMW3WqW8c8p-0).
-
----
 # 📚 Sobre o Projeto
 
 O **Atmos** é um projeto acadêmico desenvolvido para a atividade **A3 da faculdade**, com o objetivo de aplicar conceitos de:
