@@ -1,0 +1,77 @@
+Você é um desenvolvedor frontend sênior especialista em UX/UI e deve transformar um protótipo de produto digital em um projeto funcional completo.
+🎯 CONTEXTO: O projeto se chama "Atmos", uma plataforma que melhora a qualidade do ambiente (ar, conforto e bem-estar) para aumentar produtividade e qualidade de vida.
+👤 PERSONA: Natalie é apaixonada por tecnologia, desenvolvimento pessoal e bem-estar. Ela busca produtividade, equilíbrio e conforto no ambiente de trabalho e casa. Sofre com ambientes abafados, cansaço mental e queda de desempenho.
+💡 OBJETIVO: Criar um sistema moderno, responsivo e funcional com aparência profissional (nível startup/SaaS), focado em bem-estar, leveza e tecnologia.
+📦 O QUE VOCÊ DEVE ENTREGAR: Crie um projeto COMPLETO com:
+
+HTML
+CSS (ou Tailwind ou Bootstrap)
+JavaScript (funcional)
+OU, se possível:
+
+React (preferencialmente com componentes organizados)
+📱 TELAS NECESSÁRIAS:
+
+Landing Page (com CTA forte)
+Login / Cadastro
+Dashboard
+Monitoramento do ambiente
+Página de planos
+Perfil do usuário
+Configurações
+🎨 DESIGN (OBRIGATÓRIO): Seguir estilo moderno inspirado em:
+
+Apple Health
+Notion
+Stripe
+Paleta:
+
+Azul (
+#3B82F6)
+Verde (
+#22C55E)
+Roxo (
+#8B5CF6)
+Fundo claro (
+#F8FAFC)
+Visual:
+
+Clean
+Espaçamento amplo
+Componentes modernos (cards, gráficos, indicadores)
+📊 FUNCIONALIDADES:
+
+Dashboard com dados simulados de:
+Qualidade do ar
+Temperatura
+Umidade
+Gráficos simples (pode usar Chart.js)
+Feedback do ambiente (Bom, Médio, Ruim)
+Sugestões inteligentes (ex: “abra a janela”)
+💳 PLANOS: Criar seção com 3 planos:
+Free:
+
+básico
+Pro:
+
+recursos intermediários
+Premium:
+
+completo + automação
+🧠 UX:
+
+Interface simples
+Navegação clara
+Mobile first
+Botões e ações intuitivas
+🔌 DADOS: Simular API (ou usar fetch com mock JSON)
+📁 ESTRUTURA: Organizar arquivos corretamente:
+
+/components
+/pages
+/styles
+🚀 IMPORTANTE:
+
+Código limpo e comentado
+Fácil de rodar localmente
+Sem dependências complexas 📌 EXTRA: Adicionar animações suaves (hover, transições) Gere todo o código completo.
