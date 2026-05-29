@@ -3,7 +3,7 @@
 O wireframe completo do projeto foi desenvolvido na plataforma Figma e está disponível para visualização através do link abaixo:
 
 **Acesso ao Wireframe:**
-https://www.figma.com/design/020llvK3y7SmnyZuXirNHk/Wireframe?node-id=0-1&p=f&t=YUmb5sfl3wEkHR2S-0
+https://www.figma.com/design/020llvK3y7SmnyZuXirNHk/Wireframe?node-id=0-1&t=dJtPCGBisadHwLd5-1
 
 O protótipo apresenta toda a estrutura visual da aplicação, incluindo as telas principais, fluxos de navegação, componentes de interface e a organização das funcionalidades propostas para o sistema.
 
