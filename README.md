@@ -4,7 +4,7 @@
 
 ## Projeto acadêmico desenvolvido pelo grupo A3
 
-Aplicação web desenvolvida com foco em experiência do usuário, organização visual e desenvolvimento front-end moderno utilizando React + Vite.
+Plataforma digital desenvolvida para monitoramento e gerenciamento de um produto físico baseado em Internet das Coisas (IoT), utilizando React + Vite para criação de uma interface moderna, intuitiva e responsiva.
 
 ![React](https://img.shields.io/badge/React-19-blue?style=for-the-badge\&logo=react)
 ![Vite](https://img.shields.io/badge/Vite-8-purple?style=for-the-badge\&logo=vite)
@@ -17,18 +17,37 @@ Aplicação web desenvolvida com foco em experiência do usuário, organização
 
 # 📚 Sobre o Projeto
 
-O **Atmos** é um projeto acadêmico desenvolvido para a atividade **A3 da faculdade**, com o objetivo de aplicar conceitos de:
+O **Atmos** é um projeto acadêmico desenvolvido para a atividade **A3 da faculdade**, com o objetivo de aplicar conceitos de desenvolvimento web, UX/UI e Internet das Coisas (IoT).
 
-* Desenvolvimento Front-End
-* Componentização com React
-* Organização de interface
-* Navegação entre páginas
-* Estruturação de aplicações modernas
-* Experiência do usuário (UI/UX)
-* Responsividade
-* Boas práticas de desenvolvimento
+A proposta consiste no desenvolvimento de uma **plataforma digital integrada a um produto físico inteligente**, responsável pelo monitoramento da qualidade do ar em ambientes internos.
 
-O sistema simula uma aplicação moderna com diferentes telas e funcionalidades visuais, permitindo ao grupo praticar desde a criação da interface até a organização do código.
+A solução é composta por duas partes:
+
+## 🔧 Produto Físico (IoT)
+
+O produto físico utiliza sensores ambientais capazes de coletar informações como:
+
+* Qualidade do ar
+* Temperatura
+* Umidade
+* Níveis de CO₂
+* Partículas poluentes
+
+Esses dados são capturados em tempo real e enviados para a plataforma digital.
+
+## 💻 Plataforma Digital Atmos
+
+A plataforma web foi desenvolvida para receber, organizar e apresentar os dados coletados pelo dispositivo físico.
+
+Por meio dela, os usuários podem:
+
+* Monitorar indicadores ambientais
+* Visualizar dashboards em tempo real
+* Receber alertas sobre condições inadequadas
+* Consultar históricos de medições
+* Gerenciar ambientes monitorados
+
+Dessa forma, o Atmos não se limita a uma aplicação web, mas atua como uma plataforma digital de gerenciamento e monitoramento para um produto físico baseado em IoT.
 
 ---
 
@@ -44,6 +63,24 @@ O projeto foi desenvolvido utilizando as seguintes tecnologias:
 | CSS3       | Estilização da interface           |
 | ESLint     | Padronização do código             |
 | Node.js    | Ambiente de execução               |
+
+---
+
+# 🌐 Arquitetura da Solução IoT
+
+A solução Atmos foi projetada com base em uma arquitetura de Internet das Coisas composta por três camadas:
+
+### 1️⃣ Camada Física
+
+Dispositivo equipado com sensores responsáveis pela coleta dos dados ambientais.
+
+### 2️⃣ Camada de Comunicação
+
+Responsável pela transmissão dos dados do dispositivo para a plataforma digital através da internet.
+
+### 3️⃣ Camada Digital
+
+Sistema web responsável pelo processamento, armazenamento e visualização das informações coletadas pelos sensores.
 
 ---
 
@@ -72,7 +109,7 @@ atmos-a3/
 
 # 🎯 Funcionalidades Desenvolvidas
 
-O projeto possui uma estrutura moderna de aplicação web contendo:
+O projeto possui uma estrutura moderna de plataforma digital contendo:
 
 ✅ Tela inicial
 
@@ -90,7 +127,11 @@ O projeto possui uma estrutura moderna de aplicação web contendo:
 
 ✅ Estilização moderna
 
-✅ Simulação de monitoramento/dados
+✅ Visualização de dados ambientais
+
+✅ Simulação de monitoramento em tempo real
+
+✅ Plataforma preparada para integração com sensores IoT
 
 ✅ Estrutura preparada para futuras integrações
 
@@ -104,15 +145,11 @@ O projeto possui uma estrutura moderna de aplicação web contendo:
 git clone LINK_DO_REPOSITORIO
 ```
 
----
-
 ## 2️⃣ Acesse a pasta do projeto
 
 ```bash
 cd prototipo-atmos-a3
 ```
-
----
 
 ## 3️⃣ Instale as dependências
 
@@ -120,15 +157,11 @@ cd prototipo-atmos-a3
 npm install
 ```
 
----
-
 ## 4️⃣ Execute o projeto
 
 ```bash
 npm run dev
 ```
-
----
 
 ## 5️⃣ Abra no navegador
 
@@ -147,7 +180,8 @@ O sistema possui uma interface moderna inspirada em aplicações reais, contendo
 * Cards informativos
 * Perfil do usuário
 * Sistema de planos
-* Dashboard visual
+* Dashboard ambiental
+* Indicadores de monitoramento
 * Layout responsivo
 
 ---
@@ -165,6 +199,8 @@ Este projeto foi criado para desenvolver conhecimentos práticos em:
 * Responsividade
 * UI/UX
 * Desenvolvimento de aplicações modernas
+* Internet das Coisas (IoT)
+* Integração entre hardware e software
 
 ---
 
@@ -176,7 +212,7 @@ Projeto desenvolvido em grupo para atividade acadêmica.
 
 * Leonardo Cordeiro Andrade
 * Felipe Felix
-* Eduardo Paleari  
+* Eduardo Paleari
 * Guilherme Sargentini
 * Juan Marcondes
 * Arthur Marques
@@ -185,21 +221,20 @@ Projeto desenvolvido em grupo para atividade acadêmica.
 
 # 📌 Status do Projeto
 
-🚧 Projeto em desenvolvimento
-
-Novas funcionalidades poderão ser adicionadas futuramente.
+🚧 Protótipo funcional da plataforma digital desenvolvido e preparado para integração com dispositivo físico IoT responsável pela coleta dos dados ambientais.
 
 ---
 
 # 🔥 Possíveis Melhorias Futuras
 
+* Integração com sensores reais
 * Integração com API
 * Banco de dados
 * Sistema de autenticação real
 * Dark Mode
-* Responsividade avançada
 * Dashboard dinâmico
-* Armazenamento de usuários
+* Notificações em tempo real
+* Monitoramento remoto
 * Deploy online
 
 ---
@@ -216,6 +251,8 @@ Durante o desenvolvimento deste projeto, o grupo pôde praticar:
 * Controle de versão com Git
 * Resolução de problemas
 * Planejamento de interface
+* Conceitos de Internet das Coisas (IoT)
+* Integração entre produto físico e plataforma digital
 
 ---
 
@@ -229,6 +266,6 @@ Este projeto possui finalidade exclusivamente acadêmica.
 
 ## 💙 Projeto desenvolvido pelo grupo A3
 
-### Faculdade • Desenvolvimento Web • React + Vite
+### Faculdade • Desenvolvimento Web • React + Vite • Internet das Coisas (IoT)
 
 </div>
