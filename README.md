@@ -1,4 +1,4 @@
-# 🌦️ Atmos — Projeto A3
+# Atmos — Projeto A3
 
 <div align="center">
 
