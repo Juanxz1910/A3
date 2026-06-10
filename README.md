@@ -210,12 +210,12 @@ Projeto desenvolvido em grupo para atividade acadêmica.
 
 ### Integrantes
 
-* Leonardo Cordeiro Andrade
-* Felipe Felix
-* Eduardo Paleari
-* Guilherme Sargentini
-* Juan Marcondes
-* Arthur Marques
+* 8261113737 - Leonardo Cordeiro Andrade
+* 826193071 - Juan de Melo Marcondes 
+* 826175400 - Guilherme Cavalcante Sargentini
+* 826183106 - Felipe Alves Felix Santos 
+* 826185545 - Arthur Marques de Andrade
+* 82619567 - Eduardo Paleari Machado
 
 ---
 
