@@ -15,6 +15,21 @@ Plataforma digital desenvolvida para monitoramento e gerenciamento de um produto
 
 ---
 
+# 👥 Equipe A3
+
+Projeto desenvolvido em grupo para atividade acadêmica.
+
+### Integrantes
+
+* 8261113737 - Leonardo Cordeiro Andrade
+* 826193071 - Juan de Melo Marcondes 
+* 826175400 - Guilherme Cavalcante Sargentini
+* 826183106 - Felipe Alves Felix Santos 
+* 826185545 - Arthur Marques de Andrade
+* 82619567 - Eduardo Paleari Machado
+
+---
+
 # 📚 Sobre o Projeto
 
 O **Atmos** é um projeto acadêmico desenvolvido para a atividade **A3 da faculdade**, com o objetivo de aplicar conceitos de desenvolvimento web, UX/UI e Internet das Coisas (IoT).
@@ -201,21 +216,6 @@ Este projeto foi criado para desenvolver conhecimentos práticos em:
 * Desenvolvimento de aplicações modernas
 * Internet das Coisas (IoT)
 * Integração entre hardware e software
-
----
-
-# 👥 Equipe A3
-
-Projeto desenvolvido em grupo para atividade acadêmica.
-
-### Integrantes
-
-* 8261113737 - Leonardo Cordeiro Andrade
-* 826193071 - Juan de Melo Marcondes 
-* 826175400 - Guilherme Cavalcante Sargentini
-* 826183106 - Felipe Alves Felix Santos 
-* 826185545 - Arthur Marques de Andrade
-* 82619567 - Eduardo Paleari Machado
 
 ---
 
